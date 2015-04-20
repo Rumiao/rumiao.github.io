@@ -62,7 +62,7 @@
       <li class="menu-item menu-item-home">
         <a href="/">
           <i class="menu-item-icon icon-home"></i> <br />
-          首頁
+          Home
         </a>
       </li>
     
@@ -70,7 +70,7 @@
       <li class="menu-item menu-item-categories">
         <a href="/categories">
           <i class="menu-item-icon icon-categories"></i> <br />
-          分類
+          Categories
         </a>
       </li>
     
@@ -78,7 +78,7 @@
       <li class="menu-item menu-item-archives">
         <a href="/archives">
           <i class="menu-item-icon icon-archives"></i> <br />
-          歸檔
+          Archives
         </a>
       </li>
     
@@ -86,7 +86,7 @@
       <li class="menu-item menu-item-tags">
         <a href="/tags">
           <i class="menu-item-icon icon-tags"></i> <br />
-          標籤
+          Tags
         </a>
       </li>
     
@@ -113,8 +113,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/04/11/NewStart/">
-                NewStart
+              <a class="post-title-link" href="/2015/04/19/Archlinux的安装与调教/">
+                Archlinux的安装与调教
               </a>
             
           
@@ -123,14 +123,14 @@
 
       <div class="post-meta">
         <span class="post-time">
-          發表於 2015-04-11
+          Posted on 2015-04-18
         </span>
 
         
           <span class="post-category">
-            &nbsp; | &nbsp; 分類於
+            &nbsp; | &nbsp; In
             
-              <a href="/categories/categories/">categories</a>
+              <a href="/categories/Linux/">Linux</a>
 
               
               
@@ -152,15 +152,19 @@
 
       
         
-          <h1 id="Mou">Mou</h1><p><img src="http://mouapp.com/Mou_128.png" alt="mou icon"></p>
-<h2 id="Overview">Overview</h2><p><strong>Mou</strong>, the missing MarkDown editor for <em>web developers</em>.</p>
-<h3 id="Syntax">Syntax</h3><h4 id="Strong_and_Emphasize">Strong and Emphasize</h4><p><strong>Strong</strong> or <strong>Strong</strong> (Cmd + B)</p>
-<p><em>emphasize</em> or <em>emphasize</em> (Cmd + I)</p>
-<p><strong>Sometimes I want a lot of text to be hold. Like, seriously, a <em>lot</em> of text</strong></p>
-<h4 id="Blockquotes">Blockquotes</h4><blockquote>
-<p>Right angle brackets &gt; are used for block quotes.</p>
-</blockquote>
-<h4 id="Email_link">Email link</h4><p>An email <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#109;&#x6f;&#101;&#64;&#x72;&#117;&#x6d;&#105;&#97;&#x2e;&#x63;&#110;">&#109;&#x6f;&#101;&#64;&#x72;&#117;&#x6d;&#105;&#97;&#x2e;&#x63;&#110;</a> link.</p>
+          <h4 id="安装前的准备">安装前的准备</h4><hr>
+<ul>
+<li><p>1 启动盘的制作<br>  找到u盘的设备文件名，比如/dev/sdb1.<br>  sudo fdisk -l</p>
+<p>  格式化u盘.<br>  sudo umount /dev/sdb1<br>  sudo mkfs.vfat /dev/sdb1</p>
+<p>  linux的文件传输命令,if后是Archlinux镜像文件的路径,of后是u盘你的设备文件名，切记不是/dev/sdb1 而是/dev/sdb.<br>  bs是传输缓冲区大小，可以是1M,2M,4M等.<br>  sudo dd if=Path_of_Archlinux.iso of=/dev/sdb bs=2M</p>
+<p>  至此启动盘制作完成</p>
+</li>
+<li>2 UEFI+GPT or BIOS+MBR?</li>
+</ul>
+<h4 id="开始安装">开始安装</h4><hr>
+<h4 id="简单的配置">简单的配置</h4><hr>
+<p><strong>图形界面和桌面环境</strong></p>
+<p><strong>一些软件</strong></p>
 
         
       
@@ -170,7 +174,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/test1/"> #test1 </a>
+            <a href="/tags/ArchLinux/"> #ArchLinux </a>
           
         </div>
       
@@ -218,21 +222,21 @@
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">1</span>
-              <span class="site-state-item-name">文章</span>
+              <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">1</span>
-              <span class="site-state-item-name">分類</span>
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">1</span>
-              <span class="site-state-item-name">標籤</span>
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">tags</span>
               </a>
           </div>
 
@@ -284,11 +288,11 @@
 </div>
 
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
-  主題 -
+  Theme -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT
   </a>
