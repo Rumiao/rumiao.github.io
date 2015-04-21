@@ -154,14 +154,85 @@
         
           <h4 id="安装前的准备">安装前的准备</h4><hr>
 <ul>
-<li><p>1 启动盘的制作<br>  找到u盘的设备文件名，比如/dev/sdb1.<br>  sudo fdisk -l</p>
-<p>  格式化u盘.<br>  sudo umount /dev/sdb1<br>  sudo mkfs.vfat /dev/sdb1</p>
-<p>  linux的文件传输命令,if后是Archlinux镜像文件的路径,of后是u盘你的设备文件名，切记不是/dev/sdb1 而是/dev/sdb.<br>  bs是传输缓冲区大小，可以是1M,2M,4M等.<br>  sudo dd if=Path_of_Archlinux.iso of=/dev/sdb bs=2M</p>
-<p>  至此启动盘制作完成</p>
+<li><p>1 启动盘的制作<br>  找到u盘的设备文件名,比如/dev/sdb1.</p>
+<pre><code>sudo fdisk <span class="operator">-l</span>
+</code></pre><p>  格式化u盘.</p>
+<pre><code>sudo umount <span class="regexp">/dev/</span>sdb1
+sudo mkfs.vfat <span class="regexp">/dev/</span>sdb1
+</code></pre><p>  linux的文件传输命令帮我们制作启动盘,if后是Archlinux镜像文件的路径,of后是u盘你的设备文件名,切记不是/dev/sdb1 而是/dev/sdb.<br>  bs是传输缓冲区大小,可以是1M,2M,4M等.</p>
+<pre><code>sudo <span class="tag">dd</span> <span class="keyword">if</span>=Path_of_Archlinux<span class="class">.iso</span> of=/dev/sdb bs=<span class="number">2</span>M
+</code></pre><p>  至此启动盘制作完成</p>
 </li>
-<li>2 UEFI+GPT or BIOS+MBR?</li>
+<li>2 UEFI+GPT or BIOS+MBR?<br>  分清你的电脑采用哪种启动引导方式和硬盘分区是正确安装的关键.现在的很多电脑已经采用了UEFI+GPT了.<br>  就以UEFI+GPT为例来安装.</li>
 </ul>
 <h4 id="开始安装">开始安装</h4><hr>
+<ul>
+<li><p>1 重要<br>  如果你是UEFI启动,那么u盘启动后会含有UEFI字样的启动选项,从此处进入开始安装系统,否则最终引导会出现问题.进入后选择第一项开始安装.</p>
+<pre><code><span class="keyword">Arch</span> Linux archiso x86_64 UEFI USB
+UEFI <span class="keyword">Shell</span> x86_64 v1
+UEFI <span class="keyword">Shell</span> x86_64 v2
+EFI Default Loader
+</code></pre></li>
+<li><p>2 分区<br>  如果是一块不含操作系统的硬盘,直接分区就可以.如果要把Arch作为第二个操作系统,那么就应该留出大小合适的硬盘出来.我在win7下预留了100G来装Arch.<br>  UEFI+GPT分区需要一个 EFI 系统分区.如果是和 Windows 双系统启动,此分区已经存在,不要重新创建.<br>  | 分区      | 大小    | 文件格式  | 挂载  |<br>  | ———    | :——-: | ————: | ——  |<br>  | /dev/sda7 | 513M    | fat32     | /boot |<br>  | /dev/sda8 | 40G     | ext4      | /     |<br>  | /dev/sda9 | 59G     | ext4      | /home |<br>  我采取了这样的方案.分区会用到fdisk, mkfs, mount, umount这些命令.</p>
+</li>
+<li><p>3 挂载<br>  必须先把/挂载在/mnt上,其他目录在/mnt/下创建后再挂载.</p>
+<pre><code>sudo mount <span class="regexp">/dev/</span>sda8 <span class="regexp">/mnt/</span>
+</code></pre><p>  然后挂载其他分区, EFI分区挂载在/mnt/boot</p>
+<pre><code>mkdir <span class="regexp">/mnt/</span>boot
+sudo mount <span class="regexp">/dev/</span>sda7 <span class="regexp">/mnt/</span>boot
+mkdir <span class="regexp">/mnt/</span>home
+sudo mount <span class="regexp">/dev/</span>sda9 <span class="regexp">/mnt/</span>home
+</code></pre></li>
+<li><p>4 联网</p>
+<ul>
+<li><p>1.无线<br>  iw dev<br>找到字段Interface wlp3s0<br>  wifi-menu wlp3s0<br>连接到网络.</p>
+</li>
+<li><p>2.有线<br>参考<a href="https://wiki.archlinux.org/index.php/Beginners%27_guide_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29" target="_blank" rel="external">Wiki</a></p>
+</li>
+</ul>
+</li>
+<li><p>5 选择安装镜像<br>  安装前需要编辑 /etc/pacman.d/mirrorlist, 将偏好的镜像放到最前面.</p>
+<pre><code>vi <span class="regexp">/etc/</span>pacman.d<span class="regexp">/mirrorlist</span>
+</code></pre><p>  Arch Linux repository mirrorlist<br>  Sorted by mirror score from mirror status page<br>  Generated on 2012-MM-DD</p>
+<p>  Server = <a href="http://mirrors.zju.edu.cn/archlinux/$repo/os/$arch" target="_blank" rel="external">http://mirrors.zju.edu.cn/archlinux/$repo/os/$arch</a><br>  Server = <a href="http://mirrors.163.com/archlinux/$repo/os/$arch" target="_blank" rel="external">http://mirrors.163.com/archlinux/$repo/os/$arch</a><br>  …</p>
+<pre><code><span class="title">sudo</span> pacman -Syy 来刷新镜像列表
+</code></pre></li>
+<li><p>6 安装基本系统</p>
+<pre><code>pacstrap -i /mnt <span class="keyword">base</span> <span class="keyword">base</span>-devel
+</code></pre></li>
+<li><p>7 生成fstab</p>
+<pre><code>genfstab -<span class="constant">U</span> -p /mnt <span class="prompt">&gt;&gt; </span>/mnt/etc/fstab
+</code></pre></li>
+<li><p>8 Chroot 并开始配置新系统</p>
+<pre><code>arch-chroot <span class="regexp">/mnt /</span>bin<span class="regexp">/bash</span>
+</code></pre><ul>
+<li><p>1.Locale<br>移除对应行前面的注释符号<br>  vi /etc/locale.gen</p>
+<p>en_US.UTF-8 UTF-8<br>zh_CN.UTF-8 UTF-8<br>zh_TW.UTF-8 UTF-8</p>
+<p>接着执行locale-gen以生成locale讯息：<br>  locale-gen<br>本地配置,设置任何中文locale,会导致tty乱码.<br>  echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</p>
+</li>
+<li><p>2.时区<br>  ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+</li>
+<li><p>3.硬件时间<br>  hwclock —systohc —utc</p>
+</li>
+<li><p>4.配置网络<br>  pacman -S iw wpa_supplicant dialog<br>就可以使用wifi-menu连接无线网了</p>
+</li>
+<li><p>5.主机名<br>  echo myhostname &gt; /etc/hostname<br>并在/etc/hosts添加同样的主机名：<br><ip-address>   <hostname.domain.org>   <hostname><br>127.0.0.1   localhost.localdomain   localhost   myhostname<br>::1     localhost.localdomain   localhost   myhostname</hostname></hostname.domain.org></ip-address></p>
+</li>
+<li><p>6.设置root密码<br>  passwd</p>
+</li>
+</ul>
+</li>
+<li><p>9 安装并配置bootloader<br>  到了关键的一步,一定要按照wiki上的选择适合自己的,UEFI主板有多种引导方式,推荐GRUB引导.</p>
+<pre><code><span class="comment">sudo</span> <span class="comment">pacman</span> <span class="literal">-</span><span class="comment">S</span> <span class="comment">grub</span> <span class="comment">efibootmgr</span>
+<span class="comment">sudo</span> <span class="comment">grub</span><span class="literal">-</span><span class="comment">install</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">target=x86_64</span><span class="literal">-</span><span class="comment">efi</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">efi</span><span class="literal">-</span><span class="comment">directory=/boot</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">bootloader</span><span class="literal">-</span><span class="comment">id=arch_grub</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">recheck</span>
+</code></pre><p>  生成grub.cfg,推荐自动化生成:推荐自动化生成:</p>
+<pre><code>sudo grub-mkconfig -o <span class="regexp">/boot/g</span>rub<span class="regexp">/grub.cfg</span>
+</code></pre></li>
+<li><p>10 卸载分区并重启系统</p>
+<pre><code><span class="keyword">exit</span>
+sudo reboot
+</code></pre></li>
+</ul>
 <h4 id="简单的配置">简单的配置</h4><hr>
 <p><strong>图形界面和桌面环境</strong></p>
 <p><strong>一些软件</strong></p>
@@ -228,14 +299,14 @@
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">categories</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
