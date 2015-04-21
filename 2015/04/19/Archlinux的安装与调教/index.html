@@ -170,7 +170,11 @@ sudo mount <span class="regexp">/dev/</span>sda9 <span class="regexp">/mnt/</spa
 </code></pre></li>
 <li><p>4 联网</p>
 <ul>
-<li><p>1.无线<br>  iw dev<br>找到字段Interface wlp3s0<br>  wifi-menu wlp3s0<br>连接到网络.</p>
+<li><p>1.无线</p>
+<pre><code><span class="title">iw</span> dev
+</code></pre><p>找到字段Interface wlp3s0</p>
+<pre><code>wifi-<span class="tag">menu</span> wlp3s0
+</code></pre><p>连接到网络.</p>
 </li>
 <li><p>2.有线<br>参考<a href="https://wiki.archlinux.org/index.php/Beginners%27_guide_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29" target="_blank" rel="external">Wiki</a></p>
 </li>
@@ -191,20 +195,31 @@ sudo mount <span class="regexp">/dev/</span>sda9 <span class="regexp">/mnt/</spa
 <li><p>8 Chroot 并开始配置新系统</p>
 <pre><code>arch-chroot <span class="regexp">/mnt /</span>bin<span class="regexp">/bash</span>
 </code></pre><ul>
-<li><p>1.Locale<br>移除对应行前面的注释符号<br>  vi /etc/locale.gen</p>
-<p>en_US.UTF-8 UTF-8<br>zh_CN.UTF-8 UTF-8<br>zh_TW.UTF-8 UTF-8</p>
-<p>接着执行locale-gen以生成locale讯息：<br>  locale-gen<br>本地配置,设置任何中文locale,会导致tty乱码.<br>  echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</p>
+<li><p>1.Locale<br>移除对应行前面的注释符号</p>
+<pre><code>vi <span class="regexp">/etc/</span>locale.gen
+</code></pre><p>en_US.UTF-8 UTF-8<br>zh_CN.UTF-8 UTF-8<br>zh_TW.UTF-8 UTF-8</p>
+<p>接着执行locale-gen以生成locale讯息：</p>
+<pre><code>locale-<span class="keyword">ge</span><span class="label">n</span>
+</code></pre><p>本地配置,设置任何中文locale,会导致tty乱码.</p>
+<pre><code>echo LANG=en_US<span class="class">.UTF-8</span> &gt; /etc/locale.conf
+</code></pre></li>
+<li><p>2.时区</p>
+<pre><code>ln -s <span class="regexp">/usr/</span>share<span class="regexp">/zoneinfo/</span>Asia<span class="regexp">/Shanghai /</span>etc<span class="regexp">/localtime</span>
+</code></pre></li>
+<li><p>3.硬件时间</p>
+<pre><code><span class="comment">hwclock</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">systohc</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">utc</span>
+</code></pre></li>
+<li><p>4.配置网络</p>
+<pre><code>pacman -S iw wp<span class="built_in">a_supplicant</span> dialog
+</code></pre><p>就可以使用wifi-menu连接无线网了</p>
 </li>
-<li><p>2.时区<br>  ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<li><p>5.主机名</p>
+<pre><code><span class="keyword">echo</span> myhostname &gt; /etc/<span class="built_in">hostname</span>
+</code></pre><p>并在/etc/hosts添加同样的主机名：<br><ip-address>   <hostname.domain.org>   <hostname><br>127.0.0.1   localhost.localdomain   localhost   myhostname<br>::1     localhost.localdomain   localhost   myhostname</hostname></hostname.domain.org></ip-address></p>
 </li>
-<li><p>3.硬件时间<br>  hwclock —systohc —utc</p>
-</li>
-<li><p>4.配置网络<br>  pacman -S iw wpa_supplicant dialog<br>就可以使用wifi-menu连接无线网了</p>
-</li>
-<li><p>5.主机名<br>  echo myhostname &gt; /etc/hostname<br>并在/etc/hosts添加同样的主机名：<br><ip-address>   <hostname.domain.org>   <hostname><br>127.0.0.1   localhost.localdomain   localhost   myhostname<br>::1     localhost.localdomain   localhost   myhostname</hostname></hostname.domain.org></ip-address></p>
-</li>
-<li><p>6.设置root密码<br>  passwd</p>
-</li>
+<li><p>6.设置root密码</p>
+<pre><code>passwd
+</code></pre></li>
 </ul>
 </li>
 <li><p>9 安装并配置bootloader<br>  到了关键的一步,一定要按照wiki上的选择适合自己的,UEFI主板有多种引导方式,推荐GRUB引导.</p>
@@ -219,8 +234,7 @@ sudo reboot
 </code></pre></li>
 </ul>
 <h4 id="简单的配置">简单的配置</h4><hr>
-<p><strong>图形界面和桌面环境</strong></p>
-<p><strong>一些软件</strong></p>
+<p>至此，安装完成。如果继续折腾的话，可以安装炫酷的窗口管理程序和桌面环境等.<a href="https://wiki.archlinux.org/" target="_blank" rel="external">Wiki</a>里有很全的指导.</p>
 
       
     </div>
